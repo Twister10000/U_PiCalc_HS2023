@@ -41,7 +41,7 @@
 #define EVBUTTONS_L3	1<<6
 #define EVBUTTONS_L4	1<<7
 #define EVBUTTONS_CLEAR	0xFF
-evButtonState = xEventGroupCreate();
+
 
 void controllerTask(void* pvParameters);
 void vUserInterface(void *pvParameters);
@@ -65,6 +65,8 @@ int main(void)
 	xTaskCreate(vUserInterface, (const char *) "UserInt_tsk", configMINIMAL_STACK_SIZE+30, NULL, 2, UserInt);
 	xTaskCreate(vPICalcLeibniz, (const char * ) "Leibniz_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, LeibnizCalc);
 	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, NilaCalc);
+	
+	evButtonState = xEventGroupCreate();
 
 	vDisplayClear();
 	vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
