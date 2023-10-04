@@ -41,6 +41,8 @@
 #define EVBUTTONS_L3	1<<6
 #define EVBUTTONS_L4	1<<7
 #define EVBUTTONS_CLEAR	0xFF
+#define LEIBNIZ_METHOD	1<<10
+#define NILA_METHOD		1<<11
 #define UIMODE_HOME 1
 #define UIMODE_LEIBNIZ 2
 #define UIMODE_NILA 3
@@ -79,6 +81,7 @@ int main(void)
 
 void vUserInterface(void *pvParameters){
 	
+	uint8_t Calc_Mode = 0;
 	(void) pvParameters;
 	
 	for (;;)
@@ -88,7 +91,8 @@ void vUserInterface(void *pvParameters){
 		xEventGroupClearBits(evButtonState, EVBUTTONS_CLEAR);
 		vDisplayClear();
 		vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
-		vDisplayWriteStringAtPos(1,0,"PI:");
+		vDisplayWriteStringAtPos(1,0,"Mode:%d", Calc_Mode);
+		vDisplayWriteStringAtPos(2,0,"PI:");
 		vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
 		
 		
