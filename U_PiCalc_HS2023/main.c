@@ -30,6 +30,13 @@
 
 #include "ButtonHandler.h"
 
+void vUserInterface(void *pvParameters);
+void vPICalcLeibniz(void *pvParameters);
+void vPICalcNila(void *pvParameters);
+
+TaskHandle_t UserInt;
+TaskHandle_t LeibnizCalc;
+TaskHandle_t NilaCalc;
 
 void controllerTask(void* pvParameters);
 
@@ -39,6 +46,9 @@ int main(void)
 	vInitDisplay();
 	
 	xTaskCreate( controllerTask, (const char *) "control_tsk", configMINIMAL_STACK_SIZE+150, NULL, 3, NULL);
+	xTaskCreate(vUserInterface, (const char *) "UserInt_tsk", configMINIMAL_STACK_SIZE+30, NULL, 2, UserInt);
+	xTaskCreate(vPICalcLeibniz, (const char * ) "Leibniz_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, LeibnizCalc);
+	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, NilaCalc);
 
 	vDisplayClear();
 	vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
@@ -46,6 +56,20 @@ int main(void)
 	vTaskStartScheduler();
 	return 0;
 }
+void vUserInterface(void *pvParameters){
+	
+	vTaskDelay(500/portTICK_RATE_MS);
+}
+
+void vPICalcLeibniz(void *pvParameters){
+	
+	vTaskDelay(500/portTICK_RATE_MS);
+}
+
+void vPICalcNila(void *pvParameters){
+	
+	vTaskDelay(500/portTICK_RATE_MS);
+}	
 
 void controllerTask(void* pvParameters) {
 	initButtons();
