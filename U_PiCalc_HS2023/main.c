@@ -30,6 +30,16 @@
 
 #include "ButtonHandler.h"
 
+#define EVBUTTONS_S1	1<<0
+#define EVBUTTONS_S2	1<<1
+#define EVBUTTONS_S3	1<<2
+#define EVBUTTONS_S4	1<<3
+#define EVBUTTONS_L1	1<<4
+#define EVBUTTONS_L2	1<<5
+#define EVBUTTONS_L3	1<<6
+#define EVBUTTONS_L4	1<<7
+#define EVBUTTONS_CLEAR	0xFF
+
 void vUserInterface(void *pvParameters);
 void vPICalcLeibniz(void *pvParameters);
 void vPICalcNila(void *pvParameters);
