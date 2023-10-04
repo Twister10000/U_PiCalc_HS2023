@@ -56,7 +56,6 @@ TaskHandle_t LeibnizCalc;
 TaskHandle_t NilaCalc;
 EventGroupHandle_t evButtonState;
 
-
 uint32_t buttonstate = 0;
 
 int main(void)
@@ -80,7 +79,22 @@ int main(void)
 
 void vUserInterface(void *pvParameters){
 	
-	vTaskDelay(500/portTICK_RATE_MS);
+	(void) pvParameters;
+	
+	for (;;)
+	{
+		
+		buttonstate = (xEventGroupGetBits(evButtonState)) & 0x000000FF;
+		vDisplayClear();
+		vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
+		vDisplayWriteStringAtPos(1,0,"PI:");
+		vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
+		
+		
+	
+		vTaskDelay(500/portTICK_RATE_MS);
+	}
+	
 }
 
 void vPICalcLeibniz(void *pvParameters){
