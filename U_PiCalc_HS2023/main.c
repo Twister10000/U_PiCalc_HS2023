@@ -70,6 +70,21 @@ int main(void)
 	return 0;
 }
 
+void vUserInterface(void *pvParameters){
+	
+	vTaskDelay(500/portTICK_RATE_MS);
+}
+
+void vPICalcLeibniz(void *pvParameters){
+	
+	vTaskDelay(500/portTICK_RATE_MS);
+}
+
+void vPICalcNila(void *pvParameters){
+	
+	vTaskDelay(500/portTICK_RATE_MS);
+}
+
 void controllerTask(void* pvParameters) {
 	initButtons();
 	for(;;) {
