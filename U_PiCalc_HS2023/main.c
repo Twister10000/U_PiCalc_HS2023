@@ -30,7 +30,7 @@
 
 #include "ButtonHandler.h"
 
-<<<<<<< Updated upstream
+
 =======
 #define EVBUTTONS_S1	1<<0
 #define EVBUTTONS_S2	1<<1
@@ -52,7 +52,7 @@ TaskHandle_t UserInt;
 TaskHandle_t LeibnizCalc;
 TaskHandle_t NilaCalc;
 EventGroupHandle_t evButtonState;
->>>>>>> Stashed changes
+
 
 uint32_t buttonstate = 0;
 
