@@ -41,6 +41,9 @@
 #define EVBUTTONS_L3	1<<6
 #define EVBUTTONS_L4	1<<7
 #define EVBUTTONS_CLEAR	0xFF
+#define UIMODE_HOME 1
+#define UIMODE_LEIBNIZ 2
+#define UIMODE_NILA 3
 
 
 void controllerTask(void* pvParameters);
