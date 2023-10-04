@@ -85,6 +85,7 @@ void vUserInterface(void *pvParameters){
 	{
 		
 		buttonstate = (xEventGroupGetBits(evButtonState)) & 0x000000FF;
+		xEventGroupClearBits(evButtonState, EVBUTTONS_CLEAR);
 		vDisplayClear();
 		vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
 		vDisplayWriteStringAtPos(1,0,"PI:");
