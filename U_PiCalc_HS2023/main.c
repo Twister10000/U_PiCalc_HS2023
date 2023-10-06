@@ -41,9 +41,9 @@
 #define EVBUTTONS_L3	1<<6
 #define EVBUTTONS_L4	1<<7
 #define EVBUTTONS_CLEAR	0x000000FF
-#define EVBUTTONS_START	1<<8
-#define EVBUTTONS_STOP	1<<9
-#define EVBUTTONS_RESET	1<<0xA
+#define EVSYSTEM_START	1<<8
+#define EVSYSTEM_STOP	1<<9
+#define EVSYSTEM_RESET	1<<0xA
 #define LEIBNIZ_METHOD	1<<0xB
 #define NILA_METHOD		1<<0xC
 #define EVSYSTEM_CLEAR	0x0000FF00
@@ -93,7 +93,7 @@ void vUserInterface(void *pvParameters){
 	for (;;)
 	{
 		
-		buttonstate = (xEventGroupGetBits(evButtonState)) & 0x000000FF;
+		buttonstate = (xEventGroupGetBits(evButtonState)) & EVBUTTON_MASK;
 		xEventGroupClearBits(evButtonState, EVBUTTONS_CLEAR);
 		vDisplayClear();
 		vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
