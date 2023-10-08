@@ -101,6 +101,25 @@ void vUserInterface(void *pvParameters){
 		vDisplayWriteStringAtPos(2,0,"PI:");
 		vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
 		
+		switch(buttonstate){
+			
+			case 1:
+				vDisplayWriteStringAtPos(1,0, "Button 1 wurde gedrückt");
+				break;
+			case 2:
+				vDisplayWriteStringAtPos(1,0, "Button 2 wurde gedrückt");
+				break;
+			case 4:
+				vDisplayWriteStringAtPos(1,0, "Button 3 wurde gedrückt");
+				break;
+			case 8:
+				vDisplayWriteStringAtPos(1,0, "Button 4 wurde gedrückt");
+				break;
+				default:
+				break;
+			
+		}
+		
 		
 	
 		vTaskDelay(500/portTICK_RATE_MS);
