@@ -62,6 +62,7 @@ void vPICalcNila(void *pvParameters);
 TaskHandle_t UserInt;
 TaskHandle_t LeibnizCalc;
 TaskHandle_t NilaCalc;
+TaskHandle_t controllertask;
 EventGroupHandle_t evButtonState;
 
 uint32_t buttonstate = 0;
