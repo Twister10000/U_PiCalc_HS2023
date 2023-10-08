@@ -30,7 +30,7 @@
 
 #include "ButtonHandler.h"
 
-
+/*DEFINES für einen sauberen C CODE */
 
 #define EVBUTTONS_S1	0x1
 #define EVBUTTONS_S2	0x2
@@ -53,6 +53,7 @@
 #define UIMODE_LEIBNIZ 2
 #define UIMODE_NILA 3
 
+/*DEFINES fertig*/
 
 void controllerTask(void* pvParameters);
 void vUserInterface(void *pvParameters);
@@ -89,7 +90,7 @@ int main(void)
 
 void vUserInterface(void *pvParameters){
 	
-	uint8_t Calc_Mode = 0;
+	uint8_t Calc_Mode = 0;  //Eine Variabel welche einen Zukfunts Nutzen hat.
 	(void) pvParameters;
 	
 	for (;;)
@@ -132,16 +133,16 @@ void vUserInterface(void *pvParameters){
 }
 
 void vPICalcLeibniz(void *pvParameters){
-	
+	//Empty Task
 	vTaskDelay(500/portTICK_RATE_MS);
 }
 
 void vPICalcNila(void *pvParameters){
-	
+	//Empy Task
 	vTaskDelay(500/portTICK_RATE_MS);
 }
 
-void controllerTask(void* pvParameters) {
+void controllerTask(void* pvParameters) { //Button Task
 	initButtons();
 	for(;;) {
 		updateButtons();
