@@ -119,17 +119,10 @@ void vUserInterface(void *pvParameters){
 				break;
 			case EVBUTTONS_S4:
 				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
-				break;
-				default:
-				break;
-			
+				break;		
 		}
-		
-		
-	
 		vTaskDelay(500/portTICK_RATE_MS);
 	}
-	
 }
 
 void vPICalcLeibniz(void *pvParameters){
