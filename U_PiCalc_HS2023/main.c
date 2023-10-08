@@ -65,6 +65,7 @@ TaskHandle_t NilaCalc;
 EventGroupHandle_t evButtonState;
 
 uint32_t buttonstate = 0;
+uint32_t systemstate = 0;
 
 int main(void)
 {
@@ -93,7 +94,8 @@ void vUserInterface(void *pvParameters){
 	for (;;)
 	{
 		
-		buttonstate = (xEventGroupGetBits(evButtonState)) & EVBUTTON_MASK;
+		buttonstate = (xEventGroupGetBits(evButtonState) & EVBUTTON_MASK);
+		systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
 		xEventGroupClearBits(evButtonState, EVBUTTONS_CLEAR);
 		vDisplayClear();
 		vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
@@ -104,7 +106,9 @@ void vUserInterface(void *pvParameters){
 		switch(buttonstate){
 			
 			case 1:
-				vDisplayWriteStringAtPos(1,0, "Button 1 wurde gedrückt");
+				
+				xEventGroupSetBits(evButtonState, EVSYSTEM_START);
+				systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
 				break;
 			case 2:
 				vDisplayWriteStringAtPos(1,0, "Button 2 wurde gedrückt");
@@ -113,7 +117,7 @@ void vUserInterface(void *pvParameters){
 				vDisplayWriteStringAtPos(1,0, "Button 3 wurde gedrückt");
 				break;
 			case 8:
-				vDisplayWriteStringAtPos(1,0, "Button 4 wurde gedrückt");
+				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 				break;
 				default:
 				break;
