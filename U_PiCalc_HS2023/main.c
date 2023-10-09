@@ -81,6 +81,7 @@ int main(void)
 	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &NilaCalc);
 	
 	evButtonState = xEventGroupCreate();
+	xEventGroupSetBits(evButtonState,NILA_METHOD);
 
 	vDisplayClear();
 	vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
