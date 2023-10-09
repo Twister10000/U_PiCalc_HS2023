@@ -118,7 +118,14 @@ void vUserInterface(void *pvParameters){
 				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 				break;
 			case EVBUTTONS_S3:
-				vDisplayWriteStringAtPos(1,0, "Button 3 wurde gedrückt");
+				if (xEventGroupWaitBits(evButtonState, LEIBNIZ_METHOD, pdFALSE, pdFALSE, 100) == LEIBNIZ_METHOD)
+				{
+					Calc_Mode = 1;
+				}
+				if (xEventGroupWaitBits(evButtonState, NILA_METHOD, pdFALSE, pdFALSE, 100) == NILA_METHOD)
+				{
+					Calc_Mode = 2;
+				}
 				break;
 			case EVBUTTONS_S4:
 				xEventGroupSetBits(evButtonState, EVSYSTEM_RESET);
