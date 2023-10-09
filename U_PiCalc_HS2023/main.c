@@ -97,7 +97,6 @@ void vUserInterface(void *pvParameters){
 	{
 		
 		buttonstate = (xEventGroupGetBits(evButtonState)) & EVBUTTON_MASK;
-		systemstate = (xEventGroupGetBits(evButtonState)) & EVSTATUS_MASK;
 		xEventGroupClearBits(evButtonState, EVBUTTONS_CLEAR);
 		vDisplayClear();
 		vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
@@ -110,14 +109,19 @@ void vUserInterface(void *pvParameters){
 			case EVBUTTONS_S1:
 				xEventGroupSetBits(evButtonState, EVSYSTEM_START);
 				systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
+				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 				break;
 			case EVBUTTONS_S2:
-				vDisplayWriteStringAtPos(1,0, "Button 2 wurde gedrückt");
+				xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
+				systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
+				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 				break;
 			case EVBUTTONS_S3:
 				vDisplayWriteStringAtPos(1,0, "Button 3 wurde gedrückt");
 				break;
 			case EVBUTTONS_S4:
+				xEventGroupSetBits(evButtonState, EVSYSTEM_RESET);
+				systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
 				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 				break;		
 		}
