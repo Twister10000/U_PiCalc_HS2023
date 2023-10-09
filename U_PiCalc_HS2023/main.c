@@ -74,10 +74,10 @@ int main(void)
 	vInitClock();
 	vInitDisplay();
 	
-	xTaskCreate(controllerTask, (const char *) "control_tsk", configMINIMAL_STACK_SIZE+150, NULL, 3, controllertask);
-	xTaskCreate(vUserInterface, (const char *) "UserInt_tsk", configMINIMAL_STACK_SIZE+30, NULL, 2, UserInt);
-	xTaskCreate(vPICalcLeibniz, (const char * ) "Leibniz_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, LeibnizCalc);
-	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, NilaCalc);
+	xTaskCreate(controllerTask, (const char *) "control_tsk", configMINIMAL_STACK_SIZE+150, NULL, 3, &controllertask);
+	xTaskCreate(vUserInterface, (const char *) "UserInt_tsk", configMINIMAL_STACK_SIZE+30, NULL, 2, &UserInt);
+	xTaskCreate(vPICalcLeibniz, (const char * ) "Leibniz_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &LeibnizCalc);
+	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &NilaCalc);
 	
 	evButtonState = xEventGroupCreate();
 
@@ -126,13 +126,28 @@ void vUserInterface(void *pvParameters){
 }
 
 void vPICalcLeibniz(void *pvParameters){
+	(void) pvParameters;
+	
+	for (;;)
+	{
+	
+	
 	//Empty Task
 	vTaskDelay(500/portTICK_RATE_MS);
+	}
 }
 
 void vPICalcNila(void *pvParameters){
+	
+	(void) pvParameters;
+	
+	for (;;)
+	{
+	
+	
 	//Empy Task
 	vTaskDelay(500/portTICK_RATE_MS);
+	}
 }
 
 void controllerTask(void* pvParameters) { //Button Task
