@@ -68,6 +68,7 @@ EventGroupHandle_t evButtonState;
 
 uint32_t buttonstate = 0;
 uint32_t systemstate = 0;
+uint8_t Calc_Mode = 0;  //Eine Variabel welche einen Zukfunts Nutzen hat.
 
 int main(void)
 {
@@ -89,8 +90,7 @@ int main(void)
 }
 
 void vUserInterface(void *pvParameters){
-	
-	uint8_t Calc_Mode = 0;  //Eine Variabel welche einen Zukfunts Nutzen hat.
+
 	(void) pvParameters;
 	
 	for (;;)
