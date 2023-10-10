@@ -30,35 +30,45 @@
 
 #include "ButtonHandler.h"
 
-#define EVBUTTONS_S1	1<<0
-#define EVBUTTONS_S2	1<<1
-#define EVBUTTONS_S3	1<<2
-#define EVBUTTONS_S4	1<<3
-#define EVBUTTONS_L1	1<<4
-#define EVBUTTONS_L2	1<<5
-#define EVBUTTONS_L3	1<<6
-#define EVBUTTONS_L4	1<<7
-#define EVBUTTONS_CLEAR	0xFF
+/*DEFINES für einen sauberen C CODE */
 
-void vUserInterface(void *pvParameters);
+#define EVSYSTEM_START	0x1
+#define EVSYSTEM_STOP	0x2
+#define EVSYSTEM_RESET	0x4
+#define LEIBNIZ_METHOD	0x8
+#define NILA_METHOD		0x10
+#define EVSYSTEM_CLEAR	0x00000007
+#define EVSTATUS_MASK	0x00000007
+#define EVCALC_MASK		0x00000018
+#define UIMODE_HOME 1
+#define UIMODE_LEIBNIZ 2
+#define UIMODE_NILA 3
+
+/*DEFINES fertig*/
+
+void controllerTask(void* pvParameters);
 void vPICalcLeibniz(void *pvParameters);
 void vPICalcNila(void *pvParameters);
 
-TaskHandle_t UserInt;
 TaskHandle_t LeibnizCalc;
 TaskHandle_t NilaCalc;
+TaskHandle_t controllertask;
+EventGroupHandle_t evButtonState;
 
-void controllerTask(void* pvParameters);
+uint32_t systemstate = 0;
+
 
 int main(void)
 {
 	vInitClock();
 	vInitDisplay();
 	
-	xTaskCreate( controllerTask, (const char *) "control_tsk", configMINIMAL_STACK_SIZE+150, NULL, 3, NULL);
-	xTaskCreate(vUserInterface, (const char *) "UserInt_tsk", configMINIMAL_STACK_SIZE+30, NULL, 2, UserInt);
-	xTaskCreate(vPICalcLeibniz, (const char * ) "Leibniz_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, LeibnizCalc);
-	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, NilaCalc);
+	xTaskCreate(controllerTask, (const char *) "control_tsk", configMINIMAL_STACK_SIZE+150, NULL, 3, &controllertask);
+	xTaskCreate(vPICalcLeibniz, (const char * ) "Leibniz_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &LeibnizCalc);
+	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &NilaCalc);
+	
+	evButtonState = xEventGroupCreate();
+	xEventGroupSetBits(evButtonState,LEIBNIZ_METHOD);
 
 	vDisplayClear();
 	vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
@@ -66,51 +76,107 @@ int main(void)
 	vTaskStartScheduler();
 	return 0;
 }
-void vUserInterface(void *pvParameters){
-	
-	vTaskDelay(500/portTICK_RATE_MS);
-}
 
 void vPICalcLeibniz(void *pvParameters){
+	(void) pvParameters;
 	
+	for (;;)
+	{
+	
+	
+	//Empty Task
 	vTaskDelay(500/portTICK_RATE_MS);
+	}
 }
 
 void vPICalcNila(void *pvParameters){
 	
+	(void) pvParameters;
+	
+	for (;;)
+	{
+	
+	
+	//Empy Task
 	vTaskDelay(500/portTICK_RATE_MS);
-}	
+	}
+}
 
-void controllerTask(void* pvParameters) {
+void controllerTask(void* pvParameters) { //Button Task
+	
+	uint8_t displaycounter = 50;
+	uint8_t Calc_Mode = 0;
+	
+
 	initButtons();
+	
 	for(;;) {
+		
 		updateButtons();
-		if(getButtonPress(BUTTON1) == SHORT_PRESSED) {
-			char pistring[12];
-			sprintf(&pistring[0], "PI: %.8f", M_PI);
-			vDisplayWriteStringAtPos(1,0, "%s", pistring);
+		
+		if (displaycounter == 0)
+		{
+			vDisplayClear();
+			vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
+			switch(Calc_Mode){
+				case 0:
+					vDisplayWriteStringAtPos(1,0,"Mode: Leibniz" );
+					break;
+				case 1:
+					vDisplayWriteStringAtPos(1,0,"Mode: Nilikantha");		
+					break;
+				default:
+					vDisplayWriteStringAtPos(1,0,"Model: NOT SET");
+					break;
+			}
+			
+			vDisplayWriteStringAtPos(2,0,"PI:");
+			vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
+			displaycounter = 50;
+		}else{
+			displaycounter--;
 		}
-		if(getButtonPress(BUTTON2) == SHORT_PRESSED) {
+
+		if(getButtonPress(BUTTON1) == SHORT_PRESSED) {
+			/*char pistring[12];
+			sprintf(&pistring[0], "PI: %.8f", M_PI);
+			vDisplayWriteStringAtPos(1,0, "%s", pistring);*/	
+			xEventGroupSetBits(evButtonState, EVSYSTEM_START);
+			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
+			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
+
+		}
+		if(getButtonPress(BUTTON2) == SHORT_PRESSED) {				
+			
+			xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
+			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
+			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 			
 		}
 		if(getButtonPress(BUTTON3) == SHORT_PRESSED) {
+			if (Calc_Mode)
+			{
+				xEventGroupClearBits(evButtonState, NILA_METHOD);
+				xEventGroupSetBits(evButtonState, LEIBNIZ_METHOD);
+
+				Calc_Mode = 0; 
+			}else{
+				
+				xEventGroupClearBits(evButtonState, LEIBNIZ_METHOD);
+				xEventGroupSetBits(evButtonState, NILA_METHOD);
+
+				Calc_Mode = 1;
+			}
+		}
+		if(getButtonPress(BUTTON4) == SHORT_PRESSED) {			
+			
+			xEventGroupSetBits(evButtonState, EVSYSTEM_RESET);
+			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
+			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 			
 		}
-		if(getButtonPress(BUTTON4) == SHORT_PRESSED) {
-			
-		}
-		if(getButtonPress(BUTTON1) == LONG_PRESSED) {
-			
-		}
-		if(getButtonPress(BUTTON2) == LONG_PRESSED) {
-			
-		}
-		if(getButtonPress(BUTTON3) == LONG_PRESSED) {
-			
-		}
-		if(getButtonPress(BUTTON4) == LONG_PRESSED) {
-			
-		}
+		
+
 		vTaskDelay(10/portTICK_RATE_MS);
 	}
 }
