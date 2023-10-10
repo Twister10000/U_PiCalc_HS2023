@@ -32,22 +32,12 @@
 
 /*DEFINES für einen sauberen C CODE */
 
-// #define EVBUTTONS_S1	0x1
-// #define EVBUTTONS_S2	0x2
-// #define EVBUTTONS_S3	0x4
-// #define EVBUTTONS_S4	0x8
-/*#define EVBUTTONS_L1	0x10
-#define EVBUTTONS_L2	0x20
-#define EVBUTTONS_L3	0x40
-#define EVBUTTONS_L4	0x80*/
-/*#define EVBUTTONS_CLEAR	0xF*/
 #define EVSYSTEM_START	0x1
 #define EVSYSTEM_STOP	0x2
 #define EVSYSTEM_RESET	0x4
 #define LEIBNIZ_METHOD	0x8
 #define NILA_METHOD		0x10
 #define EVSYSTEM_CLEAR	0x00000007
-/*#define EVBUTTON_MASK	0x0000000F*/
 #define EVSTATUS_MASK	0x00000007
 #define EVCALC_MASK		0x00000018
 #define UIMODE_HOME 1
@@ -66,7 +56,6 @@ TaskHandle_t controllertask;
 EventGroupHandle_t evButtonState;
 
 uint32_t systemstate = 0;
-
 
 
 int main(void)
