@@ -40,6 +40,7 @@
 #define EVSYSTEM_CLEAR	0x00000007
 #define EVSTATUS_MASK	0x00000007
 #define EVCALC_MASK		0x00000018
+#define START_LEIBNIZ	LEIBNIZ_METHOD|EVSYSTEM_START
 #define UIMODE_HOME 1
 #define UIMODE_LEIBNIZ 2
 #define UIMODE_NILA 3
@@ -57,6 +58,7 @@ EventGroupHandle_t evButtonState;
 
 uint32_t systemstate = 0;
 
+float pi = 0;
 
 int main(void)
 {
@@ -79,13 +81,27 @@ int main(void)
 
 void vPICalcLeibniz(void *pvParameters){
 	(void) pvParameters;
-	
+	float pi4 = 1;
+	uint32_t n = 3;
 	for (;;)
 	{
-	
-	
-	//Empty Task
-	vTaskDelay(500/portTICK_RATE_MS);
+
+		if (xEventGroupGetBits(evButtonState) & EVSYSTEM_RESET)
+		{
+				float pi4 = 1;
+				uint32_t n = 3;
+				pi = 0;
+		}
+		while ((xEventGroupGetBits(evButtonState) & EVSYSTEM_START) && (xEventGroupGetBits(evButtonState) & LEIBNIZ_METHOD))
+		{
+			pi4 = pi4 - (1.0/n) + (1.0/(n+2));
+			n += 4;
+			pi = pi4*4;
+		}
+		
+
+		
+	vTaskDelay(20/portTICK_RATE_MS);
 	}
 }
 
