@@ -125,7 +125,18 @@ void controllerTask(void* pvParameters) { //Button Task
 		{
 			vDisplayClear();
 			vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
-			vDisplayWriteStringAtPos(1,0,"Mode:%d", Calc_Mode);
+			switch(Calc_Mode){
+				case 0:
+					vDisplayWriteStringAtPos(1,0,"Mode: Leibniz" );
+					break;
+				case 1:
+					vDisplayWriteStringAtPos(1,0,"Mode: Nilikantha");		
+					break;
+				default:
+					vDisplayWriteStringAtPos(1,0,"Model: NOT SET");
+					break;
+			}
+			
 			vDisplayWriteStringAtPos(2,0,"PI:");
 			vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
 			displaycounter = 50;
@@ -150,7 +161,19 @@ void controllerTask(void* pvParameters) { //Button Task
 			
 		}
 		if(getButtonPress(BUTTON3) == SHORT_PRESSED) {
-			
+			if (Calc_Mode)
+			{
+				xEventGroupClearBits(evButtonState, NILA_METHOD);
+				xEventGroupSetBits(evButtonState, LEIBNIZ_METHOD);
+
+				Calc_Mode = 0; 
+			}else{
+				
+				xEventGroupClearBits(evButtonState, LEIBNIZ_METHOD);
+				xEventGroupSetBits(evButtonState, NILA_METHOD);
+
+				Calc_Mode = 1;
+			}
 		}
 		if(getButtonPress(BUTTON4) == SHORT_PRESSED) {			
 			
