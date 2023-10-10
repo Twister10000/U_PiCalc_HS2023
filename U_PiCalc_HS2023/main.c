@@ -116,6 +116,8 @@ void vPICalcNila(void *pvParameters){
 void controllerTask(void* pvParameters) { //Button Task
 	
 	uint8_t displaycounter = 50;
+	uint8_t Calc_Mode = 0;
+	
 
 	initButtons();
 	
