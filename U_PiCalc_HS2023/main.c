@@ -57,7 +57,6 @@ TaskHandle_t controllertask;
 EventGroupHandle_t evButtonState;
 
 uint32_t systemstate = 0;
-
 float pi = 0;
 
 int main(void)
@@ -129,7 +128,6 @@ void controllerTask(void* pvParameters) { //Button Task
 	for(;;) {
 		
 		updateButtons();
-		
 		if (displaycounter == 0)
 		{
 			vDisplayClear();
@@ -155,19 +153,18 @@ void controllerTask(void* pvParameters) { //Button Task
 		}
 
 		if(getButtonPress(BUTTON1) == SHORT_PRESSED) {
-			/*char pistring[12];
-			sprintf(&pistring[0], "PI: %.8f", M_PI);
-			vDisplayWriteStringAtPos(1,0, "%s", pistring);*/	
+
+			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);	
 			xEventGroupSetBits(evButtonState, EVSYSTEM_START);
-			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
-			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
+			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK); //Debug
+			
 
 		}
 		if(getButtonPress(BUTTON2) == SHORT_PRESSED) {				
-			
-			xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
-			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
 			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
+			xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
+			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK); //Debug
+			
 			
 		}
 		if(getButtonPress(BUTTON3) == SHORT_PRESSED) {
@@ -175,21 +172,20 @@ void controllerTask(void* pvParameters) { //Button Task
 			{
 				xEventGroupClearBits(evButtonState, NILA_METHOD);
 				xEventGroupSetBits(evButtonState, LEIBNIZ_METHOD);
-
 				Calc_Mode = 0; 
 			}else{
 				
 				xEventGroupClearBits(evButtonState, LEIBNIZ_METHOD);
 				xEventGroupSetBits(evButtonState, NILA_METHOD);
-
 				Calc_Mode = 1;
 			}
 		}
 		if(getButtonPress(BUTTON4) == SHORT_PRESSED) {			
 			
-			xEventGroupSetBits(evButtonState, EVSYSTEM_RESET);
-			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
 			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
+			xEventGroupSetBits(evButtonState, EVSYSTEM_RESET);
+			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK); //Debug
+			
 			
 		}
 		
