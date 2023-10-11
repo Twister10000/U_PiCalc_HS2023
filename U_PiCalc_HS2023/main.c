@@ -67,7 +67,6 @@ int main(void)
 	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &NilaCalc);
 	
 	evButtonState = xEventGroupCreate();
-	xEventGroupSetBits(evButtonState,LEIBNIZ_METHOD);
 
 	vDisplayClear();
 	vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
@@ -88,14 +87,37 @@ void vPICalcLeibniz(void *pvParameters){
 				pi4 = 1;
 				n = 3;
 				pi = 0;
+				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 		}
-		while ((xEventGroupGetBits(evButtonState) & EVSYSTEM_START) && (xEventGroupGetBits(evButtonState) & LEIBNIZ_METHOD))
+		
+		if (xEventGroupGetBits(evButtonState) & EVSYSTEM_STOP)
 		{
-			
-			pi4 = pi4 - (1.0/n) + (1.0/(n+2));
-			n += 4;
-			pi = pi4*4;
+			xEventGroupClearBits(evButtonState, LEIBNIZ_STATUS);
+			xEventGroupClearBits(evButtonState, EVSYSTEM_START);
 		}
+		
+		if (xEventGroupGetBits(evButtonState) & EVSYSTEM_START)
+		{
+			xEventGroupSetBits(evButtonState, LEIBNIZ_STATUS);
+			xEventGroupClearBits(evButtonState, EVSYSTEM_START);
+		}
+		
+		if (xEventGroupGetBits(evButtonState) & LEIBNIZ_STATUS)
+		{
+			 			pi4 = pi4 - (1.0/n) + (1.0/(n+2));
+			 			n += 4;
+			 			pi = pi4*4;
+		}
+		
+		
+		
+// 		while ((xEventGroupGetBits(evButtonState) & EVSYSTEM_START) && (xEventGroupGetBits(evButtonState) & LEIBNIZ_METHOD))
+// 		{
+// 			
+// 			pi4 = pi4 - (1.0/n) + (1.0/(n+2));
+// 			n += 4;
+// 			pi = pi4*4;
+// 		}
 		
 
 		
@@ -169,13 +191,18 @@ void controllerTask(void* pvParameters) { //Button Task
 		if(getButtonPress(BUTTON3) == SHORT_PRESSED) {
 			if (Calc_Mode)
 			{
-				xEventGroupClearBits(evButtonState, NILA_METHOD);
-				xEventGroupSetBits(evButtonState, LEIBNIZ_METHOD);
+				vTaskSuspend(NilaCalc);
+				vTaskResume(LeibnizCalc);
+				xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
+// 				xEventGroupClearBits(evButtonState, NILA_METHOD);
+// 				xEventGroupSetBits(evButtonState, LEIBNIZ_METHOD);
 				Calc_Mode = 0; 
 			}else{
-				
-				xEventGroupClearBits(evButtonState, LEIBNIZ_METHOD);
-				xEventGroupSetBits(evButtonState, NILA_METHOD);
+				vTaskSuspend(LeibnizCalc);
+				vTaskResume(NilaCalc);
+				xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
+// 				xEventGroupClearBits(evButtonState, LEIBNIZ_METHOD);
+// 				xEventGroupSetBits(evButtonState, NILA_METHOD);
 				Calc_Mode = 1;
 			}
 		}
