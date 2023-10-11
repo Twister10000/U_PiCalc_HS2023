@@ -87,12 +87,13 @@ void vPICalcLeibniz(void *pvParameters){
 
 		if (xEventGroupGetBits(evButtonState) & EVSYSTEM_RESET)
 		{
-				float pi4 = 1;
-				uint32_t n = 3;
+				pi4 = 1;
+				n = 3;
 				pi = 0;
 		}
 		while ((xEventGroupGetBits(evButtonState) & EVSYSTEM_START) && (xEventGroupGetBits(evButtonState) & LEIBNIZ_METHOD))
 		{
+			
 			pi4 = pi4 - (1.0/n) + (1.0/(n+2));
 			n += 4;
 			pi = pi4*4;
