@@ -118,19 +118,6 @@ void vPICalcLeibniz(void *pvParameters){
 			xEventGroupClearBits(evButtonState, LEIBNIZ_STATUS);
 		}
 		
-		
-		
-// 		while ((xEventGroupGetBits(evButtonState) & EVSYSTEM_START) && (xEventGroupGetBits(evButtonState) & LEIBNIZ_METHOD))
-// 		{
-// 			
-// 			pi4 = pi4 - (1.0/n) + (1.0/(n+2));
-// 			n += 4;
-// 			pi = pi4*4;
-// 		}
-		
-
-		
-	vTaskDelay(20/portTICK_RATE_MS);
 	}
 }
 
