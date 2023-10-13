@@ -55,6 +55,9 @@ TaskHandle_t controllertask;
 EventGroupHandle_t evButtonState;
 
 uint32_t systemstate = 0;
+uint32_t starttime = 0;
+uint32_t time = 0;
+
 float pi = 0;
 
 int main(void)
@@ -98,6 +101,7 @@ void vPICalcLeibniz(void *pvParameters){
 		
 		if (xEventGroupGetBits(evButtonState) & EVSYSTEM_START)
 		{
+			starttime = xTaskGetTickCount();
 			xEventGroupSetBits(evButtonState, LEIBNIZ_STATUS);
 			xEventGroupClearBits(evButtonState, EVSYSTEM_START);
 		}
