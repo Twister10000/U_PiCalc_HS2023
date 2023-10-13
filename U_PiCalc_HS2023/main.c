@@ -169,9 +169,11 @@ void controllerTask(void* pvParameters) { //Button Task
 					vDisplayWriteStringAtPos(1,0,"Model: NOT SET");
 					break;
 			}
+			char time_Calc [12];
 			char pistring[12];
 			sprintf(&pistring[0], "%.6f", pi);
-			vDisplayWriteStringAtPos(2,0,"PI:%s", pistring);
+			sprintf(&time_Calc[0], "%lu", time);
+			vDisplayWriteStringAtPos(2,0,"PI:%s T:%sms", pistring, time_Calc);
 			vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
 			displaycounter = 50;
 		}else{
