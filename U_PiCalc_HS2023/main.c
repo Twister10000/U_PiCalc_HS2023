@@ -108,6 +108,11 @@ void vPICalcLeibniz(void *pvParameters){
 			 			n += 4;
 			 			pi = pi4*4;
 		}
+		if (pi > 3.141598 && pi < 3.141599)
+		{
+			time = xTaskGetTickCount() - starttime;
+			xEventGroupClearBits(evButtonState, LEIBNIZ_STATUS);
+		}
 		
 		
 		
