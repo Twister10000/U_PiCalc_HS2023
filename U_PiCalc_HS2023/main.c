@@ -90,6 +90,7 @@ void vPICalcLeibniz(void *pvParameters){
 				pi4 = 1;
 				n = 3;
 				pi = 0;
+				time = 0;
 				xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 		}
 		
