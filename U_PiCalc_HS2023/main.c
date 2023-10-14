@@ -67,9 +67,7 @@ int main(void)
 	
 	evButtonState = xEventGroupCreate();
 
-	vDisplayClear();
-	vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
-	
+	vDisplayClear();	
 	vTaskStartScheduler();
 	return 0;
 }
@@ -127,10 +125,9 @@ void vPICalcNila(void *pvParameters){
 
 void controllerTask(void* pvParameters) { //Button Task
 	
+	(void) pvParameters;
 	uint8_t displaycounter = 50;
 	uint8_t Calc_Mode = 0;
-	
-
 	initButtons();
 	
 	for(;;) {
@@ -166,18 +163,12 @@ void controllerTask(void* pvParameters) { //Button Task
 
 		if(getButtonPress(BUTTON1) == SHORT_PRESSED) {
 
-			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);	
+			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);	
 			xEventGroupSetBits(evButtonState, EVSYSTEM_START);
-			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK); //Debug
-			
-
 		}
 		if(getButtonPress(BUTTON2) == SHORT_PRESSED) {				
 			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 			xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
-			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK); //Debug
-			
-			
 		}
 		if(getButtonPress(BUTTON3) == SHORT_PRESSED) {
 			switch(Calc_Mode){
@@ -201,12 +192,7 @@ void controllerTask(void* pvParameters) { //Button Task
 			
 			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
 			xEventGroupSetBits(evButtonState, EVSYSTEM_RESET);
-			systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK); //Debug
-			
-			
 		}
-		
-
 		vTaskDelay(10/portTICK_RATE_MS);
 	}
 }
