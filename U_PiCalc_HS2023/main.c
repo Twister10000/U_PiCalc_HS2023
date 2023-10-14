@@ -167,7 +167,7 @@ void controllerTask(void* pvParameters) { //Button Task
 			xEventGroupSetBits(evButtonState, EVSYSTEM_START);
 		}
 		if(getButtonPress(BUTTON2) == SHORT_PRESSED) {				
-			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
+			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);
 			xEventGroupSetBits(evButtonState, EVSYSTEM_STOP);
 		}
 		if(getButtonPress(BUTTON3) == SHORT_PRESSED) {
@@ -190,7 +190,7 @@ void controllerTask(void* pvParameters) { //Button Task
 		}
 		if(getButtonPress(BUTTON4) == SHORT_PRESSED) {			
 			
-			xEventGroupClearBits(evButtonState, EVSYSTEM_CLEAR);
+			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);
 			xEventGroupSetBits(evButtonState, EVSYSTEM_RESET);
 		}
 		vTaskDelay(10/portTICK_RATE_MS);
