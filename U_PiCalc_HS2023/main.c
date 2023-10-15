@@ -114,17 +114,19 @@ void vPICalcLeibniz(void *pvParameters){
 void vPICalcNila(void *pvParameters){
 	
 	(void) pvParameters;
-	
+	int8_t sign = 1;
+	int32_t k = 3;
 	for (;;)
 	{
-	
-	
-	//Empy Task
-	vTaskDelay(500/portTICK_RATE_MS);
 		systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
 		
 		switch(systemstate){
 			case EVSYSTEM_RESET:
+			k = 3;
+			sign = 1;
+			pi = 0;
+			time = 0;
+			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);
 			break;
 			case EVSYSTEM_STOP:
 			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);
@@ -133,8 +135,13 @@ void vPICalcNila(void *pvParameters){
 			starttime = xTaskGetTickCount();
 			xEventGroupSetBits(evButtonState, NILA_STATUS);
 			xEventGroupClearBits (evButtonState, EVSYSTEM_START);
+			pi = 3;
 			break;
 			case NILA_STATUS:
+			pi = pi + (sign * (4/(pow(k,3) - k)));
+			sign = sign *(-1);
+			k = k+2;
+			time = xTaskGetTickCount() - starttime;
 			if (pi > 3.141598 && pi < 3.141599)
 			{
 				xEventGroupClearBits(evButtonState, NILA_STATUS);
