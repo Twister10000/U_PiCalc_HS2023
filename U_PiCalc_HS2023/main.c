@@ -121,6 +121,26 @@ void vPICalcNila(void *pvParameters){
 	
 	//Empy Task
 	vTaskDelay(500/portTICK_RATE_MS);
+		systemstate = (xEventGroupGetBits(evButtonState) & EVSTATUS_MASK);
+		
+		switch(systemstate){
+			case EVSYSTEM_RESET:
+			break;
+			case EVSYSTEM_STOP:
+			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);
+			break;
+			case EVSYSTEM_START:
+			starttime = xTaskGetTickCount();
+			xEventGroupSetBits(evButtonState, NILA_STATUS);
+			xEventGroupClearBits (evButtonState, EVSYSTEM_START);
+			break;
+			case NILA_STATUS:
+			if (pi > 3.141598 && pi < 3.141599)
+			{
+				xEventGroupClearBits(evButtonState, NILA_STATUS);
+			}
+			break;
+		}
 	}
 }
 
