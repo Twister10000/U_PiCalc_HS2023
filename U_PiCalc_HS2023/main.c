@@ -65,6 +65,8 @@ int main(void)
 	xTaskCreate(vPICalcLeibniz, (const char * ) "Leibniz_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &LeibnizCalc);
 	xTaskCreate(vPICalcNila, (const char * ) "Nila_tsk", configMINIMAL_STACK_SIZE+30, NULL, 1, &NilaCalc);
 	
+	vTaskSuspend(NilaCalc);
+	vTaskSuspend(LeibnizCalc);
 	evButtonState = xEventGroupCreate();
 
 	vDisplayClear();	
