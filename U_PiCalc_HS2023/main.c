@@ -2,7 +2,7 @@
  * U_PiCalc_HS2023.c
  *
  * Created: 3.10.2023:18:15:00
- * Author : -
+ * Author : Twister10000
  */ 
 
 #include <math.h>
@@ -105,7 +105,6 @@ void vPICalcLeibniz(void *pvParameters){
 				time = xTaskGetTickCount() - starttime;
 				if (pi > 3.141598 && pi < 3.141599)
 				{
-					
 					xEventGroupClearBits(evButtonState, LEIBNIZ_STATUS);
 	 			}
 				break;		
