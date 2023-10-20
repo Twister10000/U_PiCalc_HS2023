@@ -180,7 +180,7 @@ void controllerTask(void* pvParameters) { //Button Task
 				char pistring[12];
 				sprintf(&pistring[0], "%.6f", pi);
 				sprintf(&time_Calc[0], "%lu", time);
-				vDisplayWriteStringAtPos(2,0,"PI:%s T:%sms", pistring, time_Calc);
+				vDisplayWriteStringAtPos(2,0,"PI:%s T%sms", pistring, time_Calc);
 				vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
 				displaycounter = 50;
 				break;
