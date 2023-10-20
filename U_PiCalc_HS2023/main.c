@@ -37,7 +37,7 @@
 #define EVSYSTEM_RESET	0x4
 #define LEIBNIZ_STATUS	0x8
 #define NILA_STATUS		0x10
-#define EVSTATUS_MASK	0x0000001F
+#define EVSTATUS_MASK	0x1F
 
 /*DEFINES fertig*/
 
