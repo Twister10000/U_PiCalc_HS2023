@@ -159,7 +159,18 @@ void vPICalcNila(void *pvParameters){
 			{
 				xEventGroupClearBits(evButtonState, NILA_STATUS);
 			}
+			break;			
+			case DISP_READ:
+			xEventGroupClearBits(evButtonState, DISP_READ);
+			xEventGroupSetBits(evButtonState, CALC_STOP);
+			xEventGroupWaitBits(evButtonState, CALC_RET, pdTRUE, pdFALSE, portMAX_DELAY);
 			break;
+			case NILA_STATUS | DISP_READ:
+			xEventGroupClearBits(evButtonState, DISP_READ);
+			xEventGroupSetBits(evButtonState, CALC_STOP);
+			xEventGroupWaitBits(evButtonState, CALC_RET, pdTRUE, pdFALSE, portMAX_DELAY);
+			break;
+			
 		}
 	}
 }
