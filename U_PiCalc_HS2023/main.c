@@ -109,7 +109,17 @@ void vPICalcLeibniz(void *pvParameters){
 				{
 					xEventGroupClearBits(evButtonState, LEIBNIZ_STATUS);
 	 			}
-				break;		
+				break;
+			case DISP_READ:
+				xEventGroupClearBits(evButtonState, DISP_READ);		
+				xEventGroupSetBits(evButtonState, CALC_STOP);	
+				xEventGroupWaitBits(evButtonState, CALC_RET, pdTRUE, pdFALSE, portMAX_DELAY);				
+				break;
+			case LEIBNIZ_STATUS | DISP_READ:
+				xEventGroupClearBits(evButtonState, DISP_READ);		
+				xEventGroupSetBits(evButtonState, CALC_STOP);
+				xEventGroupWaitBits(evButtonState, CALC_RET, pdTRUE, pdFALSE, portMAX_DELAY);
+				break;
 		}
 	}
 }
@@ -181,11 +191,14 @@ void controllerTask(void* pvParameters) { //Button Task
 				}
 				char time_Calc [12];
 				char pistring[12];
+				xEventGroupSetBits(evButtonState, DISP_READ);
+				xEventGroupWaitBits(evButtonState, CALC_STOP, pdTRUE, pdFALSE, portMAX_DELAY);
 				sprintf(&pistring[0], "%.6f", pi);
 				sprintf(&time_Calc[0], "%lu", time);
 				vDisplayWriteStringAtPos(2,0,"PI:%s T%sms", pistring, time_Calc);
 				vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
 				displaycounter = 50;
+				xEventGroupSetBits(evButtonState, CALC_RET);
 				break;
 			default:
 				displaycounter--;
