@@ -56,7 +56,7 @@ EventGroupHandle_t evButtonState;
 uint32_t systemstate = 0;
 uint32_t starttime = 0;
 uint32_t time = 0;
-bool pi_Status = true;
+int8_t pi_Status = 0;
 
 float pi = 0;
 
@@ -91,7 +91,7 @@ void vPICalcLeibniz(void *pvParameters){
 				n = 3;
 				pi = 0;
 				time = 0;
-				pi_Status = true;
+				pi_Status = 0;
 				xEventGroupClearBits(evButtonState, EVSTATUS_MASK);
 				break;
 			case EVSYSTEM_STOP:
@@ -106,14 +106,16 @@ void vPICalcLeibniz(void *pvParameters){
 				pi4 = pi4 - (1.0/n) + (1.0/(n+2));
 				n += 4;
 				pi = pi4*4;
-				if (pi_Status)
-				{
-					time = xTaskGetTickCount() - starttime;
+				switch(pi_Status){
+					case 0:
+						time = xTaskGetTickCount() - starttime;
+						break;
+					default:
+						break;
 				}
-				
 				if (pi > 3.141598 && pi < 3.141599)
 				{
-					pi_Status = false;
+					pi_Status = 1;
 	 			}
 				break;
 			case DISP_READ:
@@ -145,7 +147,7 @@ void vPICalcNila(void *pvParameters){
 			sign = 1;
 			pi = 0;
 			time = 0;
-			pi_Status = true;
+			pi_Status = 0;
 			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);
 			break;
 			case EVSYSTEM_STOP:
@@ -161,14 +163,16 @@ void vPICalcNila(void *pvParameters){
 			pi = pi + (sign * (4/(pow(k,3) - k)));
 			sign = sign *(-1);
 			k = k+2;				
-			if (pi_Status)
-			{
+			switch(pi_Status){
+				case 0:
 				time = xTaskGetTickCount() - starttime;
-			}
-			
+				break;
+				default:
+				break;
+			}						
 			if (pi > 3.141598 && pi < 3.141599)
 			{
-				pi_Status = false;
+				pi_Status = 1;
 			}
 			break;			
 			case DISP_READ:
