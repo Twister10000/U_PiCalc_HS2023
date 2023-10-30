@@ -44,23 +44,26 @@
 
 /*DEFINES fertig*/
 
+/*Preannounce tasks*/
 void controllerTask(void* pvParameters);
 void vPICalcLeibniz(void *pvParameters);
 void vPICalcNila(void *pvParameters);
 
+/*Create several handles*/
 TaskHandle_t LeibnizCalc;
 TaskHandle_t NilaCalc;
 TaskHandle_t controllertask;
 EventGroupHandle_t evButtonState;
 
+/*Create several variables*/
 uint32_t systemstate = 0;
 uint32_t starttime = 0;
 uint32_t time = 0;
 int8_t pi_Status = 0;
-
 float pi = 0;
 
-int main(void)
+/*Tasks are created and the scheduler is started. FREERTOS is started*/
+int main(void) 
 {
 	vInitClock();
 	vInitDisplay();
@@ -77,6 +80,7 @@ int main(void)
 	return 0;
 }
 
+/*Calculation task for Leibniz series*/
 void vPICalcLeibniz(void *pvParameters){
 	(void) pvParameters;
 	float pi4 = 1;
@@ -118,12 +122,14 @@ void vPICalcLeibniz(void *pvParameters){
 						break;
 				}
 				break;
-			case DISP_READ:
+			/*Case for the ControllerTask*/
+			case DISP_READ:	
 				xEventGroupClearBits(evButtonState, DISP_READ);		
 				xEventGroupSetBits(evButtonState, CALC_STOP);	
 				xEventGroupWaitBits(evButtonState, CALC_RET, pdTRUE, pdFALSE, portMAX_DELAY);				
 				break;
-			case LEIBNIZ_STATUS | DISP_READ:
+			/*Case for the ControllerTask*/
+			case LEIBNIZ_STATUS | DISP_READ: 
 				xEventGroupClearBits(evButtonState, DISP_READ);		
 				xEventGroupSetBits(evButtonState, CALC_STOP);
 				xEventGroupWaitBits(evButtonState, CALC_RET, pdTRUE, pdFALSE, portMAX_DELAY);
@@ -131,7 +137,7 @@ void vPICalcLeibniz(void *pvParameters){
 		}
 	}
 }
-
+/*Calculation taks for Nilikantha*/
 void vPICalcNila(void *pvParameters){
 	
 	(void) pvParameters;
@@ -174,12 +180,14 @@ void vPICalcNila(void *pvParameters){
 				default:
 				break;
 			}						
-			break;			
-			case DISP_READ:
+			break;
+			/*Case for the ControllerTask*/			
+			case DISP_READ: 
 			xEventGroupClearBits(evButtonState, DISP_READ);
 			xEventGroupSetBits(evButtonState, CALC_STOP);
 			xEventGroupWaitBits(evButtonState, CALC_RET, pdTRUE, pdFALSE, portMAX_DELAY);
 			break;
+			/*Case for the ControllerTask*/
 			case NILA_STATUS | DISP_READ:
 			xEventGroupClearBits(evButtonState, DISP_READ);
 			xEventGroupSetBits(evButtonState, CALC_STOP);
@@ -189,8 +197,8 @@ void vPICalcNila(void *pvParameters){
 		}
 	}
 }
-
-void controllerTask(void* pvParameters) { //Button Task
+/**ControllerTask*/
+void controllerTask(void* pvParameters) {
 	
 	(void) pvParameters;
 	uint8_t displaycounter = 50;
@@ -201,6 +209,7 @@ void controllerTask(void* pvParameters) { //Button Task
 		
 		updateButtons();
 		switch(displaycounter){
+			/*Case for display update*/
 			case 0:
 				vDisplayClear();
 				vDisplayWriteStringAtPos(0,0,"PI-Calc HS2023");
@@ -217,6 +226,7 @@ void controllerTask(void* pvParameters) { //Button Task
 				}
 				char time_Calc [12];
 				char pistring[12];
+				/*Pause calculation task*/
 				xEventGroupSetBits(evButtonState, DISP_READ);
 				xEventGroupWaitBits(evButtonState, CALC_STOP, pdTRUE, pdFALSE, portMAX_DELAY);
 				sprintf(&pistring[0], "%.6f", pi);
@@ -224,13 +234,14 @@ void controllerTask(void* pvParameters) { //Button Task
 				vDisplayWriteStringAtPos(2,0,"PI:%s T%sms", pistring, time_Calc);
 				vDisplayWriteStringAtPos(3,0,"Start Stop CHG RST");
 				displaycounter = 50;
+				/*Continue calculation task*/
 				xEventGroupSetBits(evButtonState, CALC_RET);
 				break;
 			default:
 				displaycounter--;
 				break;
 		}
-
+		/*Request inputs button*/
 		if(getButtonPress(BUTTON1) == SHORT_PRESSED) {
 
 			xEventGroupClearBits(evButtonState, EVSTATUS_MASK);	
