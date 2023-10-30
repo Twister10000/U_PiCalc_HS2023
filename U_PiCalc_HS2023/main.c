@@ -197,7 +197,7 @@ void vPICalcNila(void *pvParameters){
 		}
 	}
 }
-/**ControllerTask*/
+/*ControllerTask*/
 void controllerTask(void* pvParameters) {
 	
 	(void) pvParameters;
