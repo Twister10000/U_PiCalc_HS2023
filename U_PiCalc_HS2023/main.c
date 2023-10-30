@@ -108,15 +108,15 @@ void vPICalcLeibniz(void *pvParameters){
 				pi = pi4*4;
 				switch(pi_Status){
 					case 0:
-						time = xTaskGetTickCount() - starttime;
+						time = xTaskGetTickCount() - starttime;				
+						if (pi > 3.141598 && pi < 3.141599)
+						{
+							pi_Status = 1;
+						}
 						break;
 					default:
 						break;
 				}
-				if (pi > 3.141598 && pi < 3.141599)
-				{
-					pi_Status = 1;
-	 			}
 				break;
 			case DISP_READ:
 				xEventGroupClearBits(evButtonState, DISP_READ);		
@@ -165,15 +165,15 @@ void vPICalcNila(void *pvParameters){
 			k = k+2;				
 			switch(pi_Status){
 				case 0:
-				time = xTaskGetTickCount() - starttime;
+				time = xTaskGetTickCount() - starttime;		
+				if (pi > 3.141598 && pi < 3.141599)
+				{
+					pi_Status = 1;
+				}
 				break;
 				default:
 				break;
 			}						
-			if (pi > 3.141598 && pi < 3.141599)
-			{
-				pi_Status = 1;
-			}
 			break;			
 			case DISP_READ:
 			xEventGroupClearBits(evButtonState, DISP_READ);
